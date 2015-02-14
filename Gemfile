@@ -1,0 +1,21 @@
+source 'https://rubygems.org'
+gem 'sinatra'
+gem 'haml'
+gem 'coffee-filter'
+gem 'mongoid'
+gem 'omniauth-twitter'
+gem 'redcarpet'
+gem 'builder'
+gem 'uuid'
+gem 'therubyracer'
+gem 'nokogiri'
+gem 'redis'
+gem 'redis-namespace'
+gem 'redis-pool'
+gem "resque", "~> 2.0.0.pre.1", github: "resque/resque"
+gem 'axlsx'
+group :development do
+	gem 'shotgun'
+	gem 'capybara-webkit'
+	gem 'aws-sdk'
+end

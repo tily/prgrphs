@@ -1,0 +1,9 @@
+{
+  "name": "prgrphs",
+  "dependencies": {
+    "bootstrap": "~3.2.0"
+  },
+  "devDependencies": {
+    "bootstrap": "~3.2.0"
+  }
+}

@@ -1,0 +1,77 @@
+!!! 5
+%html
+	%head
+		%meta{charset: 'utf-8'}/
+		%meta{name:"viewport",content:"width=device-width,initial-scale=1.0"}
+		%meta{name:"Hatena::Bookmark",content:"nocomment"}
+		- if @user
+			%link{rel:"Schema.DC",href:"http://purl.org/dc/elements/1.1/"}
+			%meta{name:"DC.rights",scheme:"DCTERMS.URI",content:"http://creativecommons.org/licenses/by-sa/4.0/"}
+			%meta{name:"DC.rights",content:"(c) #{@user.screen_name}"}
+		%title= request.url
+		- if @paragraph
+			%meta{property:"twitter:card",content:"summary"}
+			%meta{property:"twitter:title",content:request.url}
+			%meta{property:"twitter:description",content:Nokogiri::HTML.fragment(markdown2html(@paragraph.body)).text.gsub(/\r?\n/, ' ')}
+			%meta{property:"twitter:image",content:"#{request.url}.png"}
+
+		%link{rel:'stylesheet',href:'/bootstrap/dist/css/bootstrap.min.css'}
+		%script{type:'text/javascript',src:'/jquery/dist/jquery.min.js'}
+		:css
+			.paragraph { padding-top: 5em; padding-bottom: 20em }
+			.container { background-color: #fff }
+			form.edit { padding-top: 5em; }
+			a,a:hover,a:visited { color: blue }
+			ul.nav { padding-top: 0.5em; margin-left: 0; }
+			.paragraph .body ul { padding-left: 15px; }
+			.paragraph blockquote { font-size: 1em; border-left: none; margin-left: 0px; padding-left: 0px;}
+			.paragraph blockquote p { padding-left: 0px; }
+			.paragraph blockquote p:first-child:before { content: '「' }
+			.paragraph blockquote p:first-child:first-letter { font-size: 2.0em; color: #999999 }
+			.paragraph img { width: 100% }
+			li.edit { visibility: hidden }
+			ul.actions { visibility: hidden }
+			#admin { color: white }
+			div.prepend { padding-bottom: 2.0em; }
+			@media (min-width: 768px) {
+			  .container {
+			    max-width: 600px;
+			  }
+			}
+			 
+			@media (min-width: 992px) {
+			  .container {
+			    max-width: 600px;
+			  }
+			}
+			 
+			@media (min-width: 1200px) {
+			  .container {
+			    max-width: 600px;
+			  }
+			}
+	%body
+		- if session[:admin]
+			%nav.navbar.navbar-fixed-bottom{role:'navigation',style:'margin-bottom:0em'}
+				%div.container-fluid
+					%ul.nav.nav-pills
+						%li
+							%a{href:'/'}
+								%strong prgrphs
+						- if current_user
+							%li
+								%a{href:"/#{current_user.screen_name}/new"}
+									%i.glyphicon.glyphicon-plus
+							%li
+								%a{href:"/#{current_user.screen_name}"}
+									%i.glyphicon.glyphicon-user
+							%li
+								%a{href:'/logout'}
+									%i.glyphicon.glyphicon-log-out
+						- else
+							%li
+								%a{href:'/auth/twitter'}
+									%i.glyphicon.glyphicon-log-in
+		%a#admin{href:"/admin?redirect_to=#{request.path}"} admin
+		%div.container
+			!= yield

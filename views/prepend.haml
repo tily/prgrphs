@@ -1,0 +1,13 @@
+.paragraph
+	.container.prepend
+		%a{href:"/#{current_user.screen_name}/#{@paragraph.id}/edit"} edit
+		%form.form-inline{action:"/#{current_user.screen_name}/#{@paragraph.id}/head",method:'POST'}
+			%input{type:'hidden',name:'_method',value:'PUT'}
+			.form-group.col-sm-11{style:'padding-left:0;padding-right:0'}
+				%input.form-control{type:'text',name:'line',style:'width:100%'}
+			.form-group.col-sm-1{style:'padding-left:0.3em'}
+				%button.btn.btn-default
+					%i.glyphicon.glyphicon-ok
+	.container
+		%div{class:@paragraph.published ? 'body' : 'body well'}
+			!= markdown2html @paragraph.body || ''

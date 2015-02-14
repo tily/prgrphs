@@ -1,0 +1,41 @@
+%form.edit{method:'POST',action: @paragraph ? "/#{current_user.screen_name}/#{@paragraph.id}" : "/#{current_user.screen_name}"}
+	- if @paragraph
+		%a{href:"/#{current_user.screen_name}/#{@paragraph.id}/prepend"} prepend
+	%span.badge.pull-right{style:'margin-bottom:0.5em'}
+	- if @paragraph
+		%input{type:'hidden',name:'_method',value:'PUT'}
+	- if params[:redirect_to]
+		%input{type:'hidden',name:'redirect_to',value:params[:redirect_to]}
+	.form-group
+		%textarea.form-control{name:'body',rows:10}= @paragraph.try(:body)
+	.form-group
+		%input{name:'published',type:'checkbox',checked:@paragraph ? @paragraph.published : 'true'}
+		publish
+		%button.btn.btn-default
+			%i.glyphicon.glyphicon-ok
+		- if @paragraph
+			%button.btn.btn-default.pull-right#delete
+				%i.glyphicon.glyphicon-trash
+			:javascript
+				$('#delete').on('click', function(e) {
+					e.preventDefault()
+					if(confirm('ok?')) {
+						form = $('<form>').attr({method:'POST',action:"/#{current_user.screen_name}/#{@paragraph.id}"})
+						form.append($('<input>').attr({name:'_method',value:'DELETE'}))
+						form.get(0).submit()
+					}
+				})
+:coffeescript
+	jQuery.fn.putCursorAtEnd = ()->
+	        @each ()->
+	                $(@).focus()
+	                if @setSelectionRange
+	                        len = $(@).val().length * 2
+	                        @setSelectionRange(len, len)
+	                else
+	                        $(@).val($(@).val())
+	                @scrollTop = 999999
+	$('textarea').putCursorAtEnd()
+	$('.badge').html $('textarea').val().length
+	$('textarea').on 'keyup', ()->
+		$('.badge').html $('textarea').val().length
