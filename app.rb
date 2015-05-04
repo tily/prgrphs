@@ -78,7 +78,7 @@ end
 
 before do
 	p "#{request.user_agent} #{request.ip}"
-	redirect "http://prgrphs.tokyo#{request.path}", 301 if request.host == 'prgrphs.herokuapp.com'
+	#redirect "http://prgrphs.tokyo#{request.path}", 301 if request.host == 'prgrphs.herokuapp.com'
 end
 
 get '/' do
