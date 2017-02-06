@@ -15,7 +15,7 @@ gem 'redis-pool'
 gem "resque", "~> 2.0.0.pre.1", github: "resque/resque"
 gem 'axlsx'
 gem 'aws-sdk'
+gem 'capybara-webkit'
 group :development do
 	gem 'shotgun'
-	gem 'capybara-webkit'
 end
