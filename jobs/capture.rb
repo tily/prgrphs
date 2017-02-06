@@ -1,5 +1,5 @@
 require 'aws-sdk'
-Resque.redis = Redis.new(url: ENV['REDISTOGO_URL'] || 'redis://localhost:6379/15')
+Resque.redis = Redis.new(url: ENV['REDISTOGO_URL'] || 'redis://redis:6379')
 module Capture
 	@queue = :default
 

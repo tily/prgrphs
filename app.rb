@@ -4,7 +4,7 @@ require './models/user.rb'
 require './models/paragraph.rb'
 require './jobs/capture.rb'
 
-Resque.redis = Redis.new(url: ENV['REDISTOGO_URL'] || 'redis://localhost:6379/15')
+Resque.redis = Redis.new(url: ENV['REDISTOGO_URL'] || 'redis://redis:6379')
 
 configure do
 	UUID_REGEXP = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
