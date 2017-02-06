@@ -4,6 +4,8 @@ class User
         field :screen_name, :type => String
         field :uid, :type => String
         field :provider, :type => String
+        field :twitter_token, :type => String
+        field :twitter_secret, :type => String
 	has_many :paragraphs
         def self.create_with_omniauth(auth)
                 create! do |user|
