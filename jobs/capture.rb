@@ -5,7 +5,7 @@ Resque.redis = Redis.new(url: ENV['REDISTOGO_URL'] || 'redis://redis:6379')
 module Capture
 	@queue = :default
 
-	def self.perform(user, id)
+	def self.perform(user, id, share_on_twitter)
 		url = "https://#{ENV['VIRTUAL_HOST']}/#{user}/#{id}"
 		file = "#{user}_#{id}.png"
 		require 'capybara-webkit'
@@ -19,7 +19,7 @@ module Capture
 		object = bucket.objects["#{user}/#{id}.png"]
 		object.write File.read(file)
 		object.acl = :public_read
-		twitter(user).update_with_media(url, File.new(file))
+		twitter(user).update_with_media(url, File.new(file)) if share_on_twitter
 		File.unlink(file)
 	end
 

@@ -90,7 +90,8 @@ post '/:user' do
 	@paragraph.body = params[:body]
 	@paragraph.published = params[:published] == 'on'
 	if @paragraph.save
-		Resque.enqueue(Capture, current_user.screen_name, @paragraph.id) if @paragraph.published
+		share_on_twitter = params[:share_on_twitter] == 'on'
+		Resque.enqueue(Capture, current_user.screen_name, @paragraph.id, share_on_twitter) if @paragraph.published
 		redirect "/#{current_user.screen_name}/#{@paragraph.id}"
 	else
 		haml :edit
@@ -155,7 +156,8 @@ put %r|^/(.+)/(#{UUID_REGEXP})| do
 	@paragraph.body = params[:body]
 	@paragraph.published = params[:published] == 'on'
 	if @paragraph.save
-		Resque.enqueue(Capture, current_user.screen_name, @paragraph.id) if @paragraph.published
+		share_on_twitter = params[:share_on_twitter] == 'on'
+		Resque.enqueue(Capture, current_user.screen_name, @paragraph.id, share_on_twitter) if @paragraph.published
 		redirect params[:redirect_to] || "/#{current_user.screen_name}/#{@paragraph.id}"
 	else
 		haml :edit

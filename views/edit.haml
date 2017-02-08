@@ -9,8 +9,10 @@
 	.form-group
 		%textarea.form-control{name:'body',rows:10}= @paragraph.try(:body)
 	.form-group
-		%input{name:'published',type:'checkbox',checked:@paragraph ? @paragraph.published : 'true'}
+		%input{name:'published',type:'checkbox',checked:@paragraph ? @paragraph.published : true}
 		publish
+		%input{name:'share_on_twitter',type:'checkbox',checked:false}
+		share on twitter
 		%button.btn.btn-default
 			%i.glyphicon.glyphicon-ok
 		- if @paragraph
