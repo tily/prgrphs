@@ -23,8 +23,8 @@
 					e.preventDefault()
 					if(confirm('ok?')) {
 						form = $('<form>').attr({method:'POST',action:"/#{current_user.screen_name}/#{@paragraph.id}"})
-						form.append($('<input>').attr({name:'_method',value:'DELETE'}))
-						form.get(0).submit()
+						form.append($('<input>').attr({name:'_method',value:'DELETE'})).css({display: "none"})
+						form.appendTo('body').submit()
 					}
 				})
 :coffeescript
