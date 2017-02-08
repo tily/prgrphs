@@ -1,7 +1,7 @@
 .paragraph
 	.container
 		%ul.nav.nav-pills.actions.pull-right
-			- if session[:admin] && @paragraph.user == current_user
+			- if @paragraph.user == current_user
 				%li.edit
 					%a{href:"/#{current_user.screen_name}/#{@paragraph.id}/edit"}
 						%i.glyphicon.glyphicon-pencil
@@ -19,11 +19,9 @@
 			diff = start - end
 			if diff > 0 && Math.abs(diff) > 100
 				window.location.href = $('.actions li.edit a', this).attr('href')
-- if !session[:admin]
-	:coffeescript
-		$('.actions').css 'visibility', 'hidden'
-		$('.paragraph')
-			.on 'mouseover', ()->
-				$('ul.actions', this).css('visibility', 'visible')
-			.on 'mouseleave', ()->
-				$('ul.actions', this).css('visibility', 'hidden')
+	$('.actions').css 'visibility', 'hidden'
+	$('.paragraph')
+		.on 'mouseover', ()->
+			$('ul.actions', this).css('visibility', 'visible')
+		.on 'mouseleave', ()->
+			$('ul.actions', this).css('visibility', 'hidden')

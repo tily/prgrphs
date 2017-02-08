@@ -29,9 +29,7 @@
 			.paragraph blockquote p:first-child:before { content: '「' }
 			.paragraph blockquote p:first-child:first-letter { font-size: 2.0em; color: #999999 }
 			.paragraph img { width: 100% }
-			li.edit { visibility: hidden }
 			ul.actions { visibility: hidden }
-			#admin { color: white }
 			div.prepend { padding-bottom: 2.0em; }
 			@media (min-width: 768px) {
 			  .container {
@@ -51,7 +49,7 @@
 			  }
 			}
 	%body
-		- if session[:admin]
+		- if params[:simple] != 'true'
 			%nav.navbar.navbar-fixed-bottom{role:'navigation',style:'margin-bottom:0em'}
 				%div.container-fluid
 					%ul.nav.nav-pills
@@ -72,6 +70,5 @@
 							%li
 								%a{href:'/auth/twitter'}
 									%i.glyphicon.glyphicon-log-in
-		%a#admin{href:"/admin?redirect_to=#{request.path}"} admin
 		%div.container
 			!= yield
