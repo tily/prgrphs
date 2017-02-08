@@ -90,7 +90,8 @@ post '/:user' do
 	@paragraph.body = params[:body]
 	@paragraph.published = params[:published] == 'on'
 	if @paragraph.save
-		Resque.enqueue(Capture, current_user.screen_name, @paragraph.id) if @paragraph.published
+		share_on_twitter = params[:share_on_twitter] == 'on'
+		Resque.enqueue(Capture, current_user.screen_name, @paragraph.id, share_on_twitter) if @paragraph.published
 		redirect "/#{current_user.screen_name}/#{@paragraph.id}"
 	else
 		haml :edit
@@ -155,7 +156,8 @@ put %r|^/(.+)/(#{UUID_REGEXP})| do
 	@paragraph.body = params[:body]
 	@paragraph.published = params[:published] == 'on'
 	if @paragraph.save
-		Resque.enqueue(Capture, current_user.screen_name, @paragraph.id) if @paragraph.published
+		share_on_twitter = params[:share_on_twitter] == 'on'
+		Resque.enqueue(Capture, current_user.screen_name, @paragraph.id, share_on_twitter) if @paragraph.published
 		redirect params[:redirect_to] || "/#{current_user.screen_name}/#{@paragraph.id}"
 	else
 		haml :edit
@@ -209,7 +211,10 @@ end
 
 get '/auth/twitter/callback' do
 	auth = request.env["omniauth.auth"]
-	User.where(:provider => auth["provider"], :uid => auth["uid"]).first || User.create_with_omniauth(auth)
+	user = User.where(:provider => auth["provider"], :uid => auth["uid"]).first || User.create_with_omniauth(auth)
+        if auth["provider"] == "twitter"
+	  user.update!(twitter_token: auth["credentials"]["token"], twitter_secret: auth["credentials"]["secret"])
+        end
 	session[:uid] = auth["uid"]
 	redirect '/'
 end

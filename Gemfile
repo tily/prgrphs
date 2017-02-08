@@ -12,9 +12,10 @@ gem 'nokogiri'
 gem 'redis'
 gem 'redis-namespace'
 gem 'redis-pool'
-gem "resque", "~> 2.0.0.pre.1", github: "resque/resque"
+gem 'resque'
 gem 'axlsx'
 gem 'aws-sdk'
+gem 'twitter'
 gem 'capybara-webkit'
 group :development do
 	gem 'shotgun'
