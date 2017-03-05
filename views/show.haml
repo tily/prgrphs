@@ -1,27 +1,27 @@
 .paragraph
-	.container
-		%ul.nav.nav-pills.actions.pull-right
-			- if @paragraph.user == current_user
-				%li.edit
-					%a{href:"/#{current_user.screen_name}/#{@paragraph.id}/edit"}
-						%i.glyphicon.glyphicon-pencil
-	.container
-		%div{class:@paragraph.published ? 'body' : 'body well'}
-			!= markdown2html @paragraph.body || ''
+  .container
+    %ul.nav.nav-pills.actions.pull-right
+      - if @paragraph.user == current_user
+        %li.edit
+          %a{href:"/#{current_user.screen_name}/#{@paragraph.id}/edit"}
+            %i.glyphicon.glyphicon-pencil
+  .container
+    %div{class:@paragraph.published ? 'body' : 'body well'}
+      != markdown2html @paragraph.body || ''
 :coffeescript
-	window.onerror = (error, url, line) -> alert error
-	start = null
-	$('.paragraph')
-		.on 'touchstart', (e)->
-			start = e.originalEvent.changedTouches[0].pageX
-		.on 'touchend', (e)->
-			end = e.originalEvent.changedTouches[0].pageX
-			diff = start - end
-			if diff > 0 && Math.abs(diff) > 100
-				window.location.href = $('.actions li.edit a', this).attr('href')
-	$('.actions').css 'visibility', 'hidden'
-	$('.paragraph')
-		.on 'mouseover', ()->
-			$('ul.actions', this).css('visibility', 'visible')
-		.on 'mouseleave', ()->
-			$('ul.actions', this).css('visibility', 'hidden')
+  window.onerror = (error, url, line) -> alert error
+  start = null
+  $('.paragraph')
+    .on 'touchstart', (e)->
+      start = e.originalEvent.changedTouches[0].pageX
+    .on 'touchend', (e)->
+      end = e.originalEvent.changedTouches[0].pageX
+      diff = start - end
+      if diff > 0 && Math.abs(diff) > 100
+        window.location.href = $('.actions li.edit a', this).attr('href')
+  $('.actions').css 'visibility', 'hidden'
+  $('.paragraph')
+    .on 'mouseover', ()->
+      $('ul.actions', this).css('visibility', 'visible')
+    .on 'mouseleave', ()->
+      $('ul.actions', this).css('visibility', 'hidden')

@@ -1,56 +1,56 @@
 - if @paragraphs
-	- @paragraphs.each do |paragraph|
-		.paragraph{id:paragraph.id}
-			.container
-				%ul.nav.nav-pills.pull-right.actions
-					- if @user == current_user
-						%li.edit
-							%a{href:"/#{paragraph.user.screen_name}/#{paragraph.id}/edit?redirect_to=/#{paragraph.user.screen_name}%23#{paragraph.id}"}
-								%i.glyphicon.glyphicon-pencil
-					%li.link
-						%a{href:"/#{@user.screen_name}/#{paragraph.id}"}
-							%i.glyphicon.glyphicon-chevron-right
-			.container
-				%div{class:paragraph.published ? 'body' : 'body well'}
-					!= markdown2html paragraph.body || ''
-	:coffeescript
-		window.onerror = (error, url, line) -> alert error
-		start = null
-		$('.paragraph')
-			.on 'touchstart', (e)->
-				start = e.originalEvent.changedTouches[0].pageX
-			.on 'touchend', (e)->
-				end = e.originalEvent.changedTouches[0].pageX
-				diff = start - end
-				if diff > 0 && Math.abs(diff) > 100
-					window.location.href = $('.actions li.link a', this).attr('href')
-		$('.paragraph')
-			.on 'mouseover', ()->
-				$('.actions', this).css('visibility', 'visible')
-			.on 'mouseleave', ()->
-				$('.actions', this).css('visibility', 'hidden')
-	- if @user == current_user
-		:coffeescript
-			timer = null
-			$('.actions').hover ()->
-				timer = setTimeout ()=>
-					$('.link', @).hide()
-					$('.edit', @).show().css('visibility', 'visible')
-				, 1500
-			, ()->
-				$('.link', @).show()
-				$('.edit', @).hide().css('visibility', 'hidden')
-				clearTimeout timer
-			$('.edit, .link').click ()->
-				clearTimeout timer
-				$('.actions').unbind('mouseenter').unbind('mouseleave')
+  - @paragraphs.each do |paragraph|
+    .paragraph{id:paragraph.id}
+      .container
+        %ul.nav.nav-pills.pull-right.actions
+          - if @user == current_user
+            %li.edit
+              %a{href:"/#{paragraph.user.screen_name}/#{paragraph.id}/edit?redirect_to=/#{paragraph.user.screen_name}%23#{paragraph.id}"}
+                %i.glyphicon.glyphicon-pencil
+          %li.link
+            %a{href:"/#{@user.screen_name}/#{paragraph.id}"}
+              %i.glyphicon.glyphicon-chevron-right
+      .container
+        %div{class:paragraph.published ? 'body' : 'body well'}
+          != markdown2html paragraph.body || ''
+  :coffeescript
+    window.onerror = (error, url, line) -> alert error
+    start = null
+    $('.paragraph')
+      .on 'touchstart', (e)->
+        start = e.originalEvent.changedTouches[0].pageX
+      .on 'touchend', (e)->
+        end = e.originalEvent.changedTouches[0].pageX
+        diff = start - end
+        if diff > 0 && Math.abs(diff) > 100
+          window.location.href = $('.actions li.link a', this).attr('href')
+    $('.paragraph')
+      .on 'mouseover', ()->
+        $('.actions', this).css('visibility', 'visible')
+      .on 'mouseleave', ()->
+        $('.actions', this).css('visibility', 'hidden')
+  - if @user == current_user
+    :coffeescript
+      timer = null
+      $('.actions').hover ()->
+        timer = setTimeout ()=>
+          $('.link', @).hide()
+          $('.edit', @).show().css('visibility', 'visible')
+        , 1500
+      , ()->
+        $('.link', @).show()
+        $('.edit', @).hide().css('visibility', 'hidden')
+        clearTimeout timer
+      $('.edit, .link').click ()->
+        clearTimeout timer
+        $('.actions').unbind('mouseenter').unbind('mouseleave')
 - if @paragraphs.total_pages > 1
-	.container.pagination
-		- if !@paragraphs.first_page?
-			%a{href:"/#{@user.screen_name}?page=#{@paragraphs.prev_page}"}
-				%i.glyphicon.glyphicon-arrow-left
-		- if !@paragraphs.first_page? && !@paragraphs.last_page?
-			&nbsp;
-		- if !@paragraphs.last_page?
-			%a{href:"/#{@user.screen_name}?page=#{@paragraphs.next_page}"}
-				%i.glyphicon.glyphicon-arrow-right
+  .container.pagination
+    - if !@paragraphs.first_page?
+      %a{href:"/#{@user.screen_name}?page=#{@paragraphs.prev_page}"}
+        %i.glyphicon.glyphicon-arrow-left
+    - if !@paragraphs.first_page? && !@paragraphs.last_page?
+      &nbsp;
+    - if !@paragraphs.last_page?
+      %a{href:"/#{@user.screen_name}?page=#{@paragraphs.next_page}"}
+        %i.glyphicon.glyphicon-arrow-right
