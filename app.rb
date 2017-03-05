@@ -74,6 +74,10 @@ end
 		#File.open('out.png', 'wb'){|f| f << head << data << crc << tail }
 		head + data + crc + tail
 	end
+
+	def current_page
+		params[:page] || 1
+	end
 end
 
 before do
@@ -204,7 +208,7 @@ end
 
 get '/:user' do
 	@user = User.where(screen_name: params[:user]).first
-	@paragraphs = @user.paragraphs.desc(:updated_at)
+	@paragraphs = @user.paragraphs.desc(:updated_at).page(current_page)
 	@paragraphs = @paragraphs.where(published: true) if @user != current_user
 	haml :list
 end

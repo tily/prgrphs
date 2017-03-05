@@ -44,3 +44,13 @@
 			$('.edit, .link').click ()->
 				clearTimeout timer
 				$('.actions').unbind('mouseenter').unbind('mouseleave')
+- if @paragraphs.total_pages > 1
+	.container.pagination
+		- if !@paragraphs.first_page?
+			%a{href:"/#{@user.screen_name}?page=#{@paragraphs.prev_page}"}
+				%i.glyphicon.glyphicon-arrow-left
+		- if !@paragraphs.first_page? && !@paragraphs.last_page?
+			&nbsp;
+		- if !@paragraphs.last_page?
+			%a{href:"/#{@user.screen_name}?page=#{@paragraphs.next_page}"}
+				%i.glyphicon.glyphicon-arrow-right
