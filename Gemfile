@@ -19,5 +19,5 @@ gem 'twitter'
 gem 'capybara-webkit'
 gem 'kaminari-mongoid'
 group :development do
-	gem 'shotgun'
+  gem 'shotgun'
 end
