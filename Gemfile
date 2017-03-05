@@ -17,6 +17,7 @@ gem 'axlsx'
 gem 'aws-sdk'
 gem 'twitter'
 gem 'capybara-webkit'
+gem 'kaminari-mongoid'
 group :development do
 	gem 'shotgun'
 end
