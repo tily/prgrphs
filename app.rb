@@ -216,9 +216,9 @@ end
 get '/auth/twitter/callback' do
   auth = request.env["omniauth.auth"]
   user = User.where(:provider => auth["provider"], :uid => auth["uid"]).first || User.create_with_omniauth(auth)
-        if auth["provider"] == "twitter"
+  if auth["provider"] == "twitter"
     user.update!(twitter_token: auth["credentials"]["token"], twitter_secret: auth["credentials"]["secret"])
-        end
+  end
   session[:uid] = auth["uid"]
   redirect '/'
 end
