@@ -28,61 +28,9 @@ helpers do
     Redcarpet::Markdown.new(renderer, autolink: true).render(markdown)
   end
 
-  def markov(text)
-    chains = Hash.new {|h, k| h[k] = Array.new }
-    ['', 'BOD', text.split(//), 'EOD'].flatten.each_cons(3) do |first, second, third|
-      p first, second, third
-      chains[first + second] << third
-    end
-    chars = []
-    char = 'BOD'
-    i = 0
-    until char =~ /EOD/
-      if char == 'BOD'
-        char = char + chains[char].sample
-      else
-        char = char[-1] + chains[char].sample
-      end
-      chars << char[-1]
-      i += 1
-      break if i == 1000
-    end
-    chars[0..-2].join
-  end
-
-  # from http://www.jarchive.org/akami/aka018.html
-  def glitchpng(file)
-    require 'zlib'
-    #abort "usage: ruby #{$0} <your.png>" unless ARGV.size == 1
-    #file = File.open(ARGV.shift, 'rb'){|f| f.read }
-    data = file.split 'IDAT'
-    head, idat, tail, size = '', [], '', 0
-    data.each do |d|
-      idat.push d[0, size] if size > 0
-      head = d[0, d.size - 4] if size == 0
-      tail = d[(size + 4)..-1]
-      size = d[d.size - 4, 4].unpack('Na').first
-    end
-    raw = Zlib::Inflate.new.inflate(idat.join)
-    
-    raw.gsub! /\w/, rand(10).to_s
-    
-    cmp = Zlib::Deflate.deflate(raw)
-    size = [cmp.size].pack('N')
-    data = size + 'IDAT' + cmp
-    crc = [Zlib.crc32(cmp, Zlib.crc32('IDAT'))].pack('N')
-    #File.open('out.png', 'wb'){|f| f << head << data << crc << tail }
-    head + data + crc + tail
-  end
-
   def current_page
     params[:page] || 1
   end
-end
-
-before do
-  p "#{request.user_agent} #{request.ip}"
-  #redirect "http://prgrphs.tokyo#{request.path}", 301 if request.host == 'prgrphs.herokuapp.com'
 end
 
 get '/' do
@@ -143,9 +91,7 @@ get %r|^/(.+)/(#{UUID_REGEXP})\.png| do
   @paragraph = Paragraph.find(params[:captures][1])
   halt 403 unless @paragraph.user == current_user || @paragraph.published
   content_type 'image/png'
-  data = open("https://s3-ap-northeast-1.amazonaws.com/prgrphs-images#{request.path}").read
-  data = glitchpng(data) if params[:glitch] == 'true'
-  data
+  open("https://s3-ap-northeast-1.amazonaws.com/prgrphs-images#{request.path}").read
 end
 
 get %r|^/(.+)/(#{UUID_REGEXP})| do
@@ -177,7 +123,6 @@ end
 get '/:user/feed' do
   @user = User.where(screen_name: params[:user]).first
   @paragraphs = @user.paragraphs.desc(:updated_at).limit(params[:count] || 1)
-  #@paragraphs = @user.paragraphs.desc(:updated_at)
   @paragraphs = @paragraphs.where(published: true) if @user != current_user
   builder :feed, layout: false
 end
@@ -185,7 +130,6 @@ end
 get '/:user.xlsx' do
   content_type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
   @user = User.where(screen_name: params[:user]).first
-  #@paragraphs = @user.paragraphs.desc(:updated_at).limit(params[:count] || 1)
   @paragraphs = @user.paragraphs.desc(:updated_at)
   @paragraphs = @paragraphs.where(published: true) if @user != current_user
   stream = nil
